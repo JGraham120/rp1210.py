@@ -1,27 +1,45 @@
-*.py[co]
+# CVS Files #
+/CVS/*
+*/CVS/*
+.cvsignore
+*/.cvsignore 
 
-# Packages
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
+# Mercurial Files #
+/.hg/*
+*/.hg/*
+.hgignore
 
-# Installer logs
-pip-log.txt
+# Keil Files #
+*.uvgui.*
+*.bak
 
-# Unit test / coverage reports
-.coverage
-.tox
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
 
-#Translations
-*.mo
+# External tool builders
+.externalToolBuilders/
 
-#Mr Developer
-.mr.developer.cfg
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+#Merge Resolution Files #
+*.orig
+*.BACKUP.*
+*.LOCAL.*
+*.REMOTE.*

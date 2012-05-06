@@ -2,7 +2,7 @@
 # Core Python Wrapper for RP1210 dlls
 ###############################################################################
 
-from ctypes import *
+from ctypes import windll, byref, c_char_p, c_int, c_short, c_long, c_void_p, create_string_buffer
 import ConfigParser
 
 """
@@ -73,7 +73,7 @@ class RP1210:
         p1 = c_int(0)
         p2 = create_string_buffer(80)
         self.dll.RP1210_GetLastErrorMsg(ErrorCode, byref(p1), p2)
-        return (p1, p2)
+        return (p1, p2.value)
 
     def GetHardwareStatus(self, ClientId, Block):
         p1 = create_string_buffer(18)
