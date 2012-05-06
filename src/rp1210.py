@@ -2,6 +2,7 @@
 # Core Python Wrapper for RP1210 dlls
 ###############################################################################
 
+from struct import pack, unpack 
 from ctypes import windll, byref, c_char_p, c_int, c_short, c_long, c_void_p, create_string_buffer
 import ConfigParser
 
@@ -82,6 +83,46 @@ class RP1210:
         
     def SendCommand(self, ClientId, CommandNumber, CommandString, CommandSize):
         return self.dll.RP1210_SendCommand(CommandNumber, ClientId, CommandString, CommandSize)
+
+class j1587Message:
+    def __init__(self, Timestamp, Priority, Mid, Data):
+        """Standard Constructor"""
+        self.Timestamp = Timestamp
+        self.Priority = Priority
+        self.Mid = Mid
+        self.Data = Data
+        
+    def fromString(self, StringForm):
+        fmt = '<IB%ds' % (len(StringForm) - 5)
+        (self.Timestamp, self.Mid, self.Data) = unpack(fmt, StringForm)
+        return self
     
+    def __str__(self):
+        fmt = '<BB%ds' % len(self.Data)
+        return pack(fmt, self.Priority, self.Mid, self.Data)
+        """Convert the Message to a string RP1210 functions will understand"""
+
+class j1939Message:
+    def __init__(self, Timestamp, Pgn, Priority, Source, Destination, Data):
+        """Standard Constructor"""
+        self.TimeStamp = Timestamp
+        self.Pgn = Pgn
+        self.Priority = Priority
+        self.Source= Source
+        self.Destination = Destination
+        self.Data = Data
     
+    def fromString(self, StringForm):
+        fmt = '<IHBBBB%ds' % (len(StringForm) - 10)
+        (self.TimeStamp, PgnLo, PgnHi, self.Priority, self.Source, self.Destination, self.Data) = unpack(fmt, StringForm)
+        self.Pgn = ((PgnHi << 16) & 0x0F0000) | (PgnLo & 0xFFFF)
+        return self
+    
+    def __str__(self):
+        """Convert the Message to a string RP1210 functions will understand"""
+        PgnLo = self.Pgn & 0xFFFF
+        PgnHi = ((self.Pgn & 0x0F0000) >> 16)
+        fmt = '<HBBBB%ds' % len(self.Data)
+        return pack(fmt, PgnLo, PgnHi, self.Priority, self.Source, self.Destination, self.Data)
+        
     
